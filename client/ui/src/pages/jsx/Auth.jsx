@@ -33,7 +33,8 @@ const LoginPage = () => {
     //     fetch();
     // },[])
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
         // TODO: Complete this logic
 
@@ -63,7 +64,7 @@ const LoginPage = () => {
             const response = await axios.post("http://localhost:8080/signUp", { Name: name, Email: email, Password: password, Role: role }, {
                 withCredentials: true
             })
-             setTimeout(() => {
+            setTimeout(() => {
                 showMessage(response.data.message, response.data.flag);
                 setTimeout(() => setIsLogin(true), 2000);
             }, 2000);
@@ -150,7 +151,7 @@ const LoginPage = () => {
                 )}
 
                 <form>
-                    <div className="form-group">
+                    <div className={styles.formGroup}>
                         <input
                             type="email"
                             id="email"
@@ -248,15 +249,15 @@ const LoginPage = () => {
                         </div>
                     )}
 
-                    <button type="submit" className="login-button" onClick={handleSubmit}>
+                    <button type="submit" className={styles.loginButton} onClick={handleSubmit}>
                         Sign {isLogin ? "In" : "Up"}
                     </button>
 
                     <div className={styles.signupLink}>
                         {isLogin ? (
-                            <>Don't have an account? <button onClick={() => setIsLogin(false)}>Sign up</button></>
+                            <>Don't have an account? <button onClick={(e) => { e.preventDefault(); setIsLogin(false) }}>Sign up</button></>
                         ) : (
-                            <>Already have an account? <button onClick={() => setIsLogin(true)}>Login</button></>
+                            <>Already have an account? <button onClick={(e) => { e.preventDefault(); setIsLogin(true) }}>Login</button></>
                         )}
                     </div>
                 </form>
