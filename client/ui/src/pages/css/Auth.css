@@ -357,3 +357,53 @@ body {
 .signup-link button:hover {
     text-decoration: underline;
 }
+
+.role-selection {
+    margin-bottom: 1.5rem;
+}
+
+.role-selection>label {
+    position: absolute;
+    top: -1.45rem;
+    left: 0;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+}
+
+.role-options {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.role-options button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 0.5rem;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.role-options button svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.role-options button.active {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.role-options button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}

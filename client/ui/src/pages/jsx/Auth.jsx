@@ -11,6 +11,8 @@ const LoginPage = () => {
     const [name, setName] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const [role, setRole] = useState('');
+
     useEffect(() => {
         if (message.text) {
             const timer = setTimeout(() => {
@@ -27,7 +29,7 @@ const LoginPage = () => {
 
         } else {
 
-            if (!name || !email || !password || !confirmPassword) {
+            if (!name || !email || !password || !confirmPassword || !role) {
                 showMessage('Please fill all fields', 'error');
                 return;
             }
@@ -174,6 +176,47 @@ const LoginPage = () => {
                             Forgot password?
                         </button>
                     </div>}
+
+                    {!isLogin && (
+                        <div className="form-group role-selection">
+                            <label>Select Your Role</label>
+                            <div className="role-options">
+                                <button
+                                    type="button"
+                                    className={role === 'admin' ? 'active' : ''}
+                                    onClick={() => setRole('admin')}
+                                >
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <path d="M12 2L4 7v10l8 5 8-5V7L12 2z" stroke="currentColor" strokeWidth="2" />
+                                        <path d="M12 22V12M5 7l7 5M19 7l-7 5" stroke="currentColor" strokeWidth="2" />
+                                    </svg>
+                                    Admin
+                                </button>
+                                <button
+                                    type="button"
+                                    className={role === 'student' ? 'active' : ''}
+                                    onClick={() => setRole('student')}
+                                >
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <path d="M12 2L4 7v10l8 5 8-5V7L12 2z" stroke="currentColor" strokeWidth="2" />
+                                        <path d="M12 22V12M5 7l7 5M19 7l-7 5" stroke="currentColor" strokeWidth="2" />
+                                    </svg>
+                                    Club President
+                                </button>
+                                <button
+                                    type="button"
+                                    className={role === 'faculty' ? 'active' : ''}
+                                    onClick={() => setRole('faculty')}
+                                >
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <path d="M12 2L4 7v10l8 5 8-5V7L12 2z" stroke="currentColor" strokeWidth="2" />
+                                        <path d="M12 22V12M5 7l7 5M19 7l-7 5" stroke="currentColor" strokeWidth="2" />
+                                    </svg>
+                                    Faculty
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
                     <button type="submit" className="login-button">
                         Sign {isLogin ? "In" : "Up"}
