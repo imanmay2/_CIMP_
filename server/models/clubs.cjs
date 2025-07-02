@@ -32,7 +32,16 @@ const clubSchema = new mongoose.Schema({
     updatedAt: {
         type: String,
         required: true
+    },
+    status: {
+        type: String,
+        required: true
+    },
+    maxMembers: {
+        type: Number,
+        required: true
     }
+
 });
 
 const Club = new mongoose.model("Club", clubSchema);

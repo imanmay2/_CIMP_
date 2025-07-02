@@ -61,12 +61,12 @@ app.listen(PORT, (req, res) => {
 app.get("/getData",(req,res)=>{
     console.log("Database hitted");
     res.json({message:"Hello From Backend !! "});
-})
+});
 
 
-// SignUp Route
+// SignUp Route.
 app.post("/signUp", async (req, res) => {
-    const { Name, Email, Password } = req.body;
+    const { Name, Email, Password,Role } = req.body;
     let userRes = await User.find({ email: Email });
     if (!userRes.length) {
         try {
@@ -108,7 +108,7 @@ app.post("/signUp", async (req, res) => {
 //login route.
 app.post("/login", async (req, res) => {
     let flag = 0;
-    const { Username, Password } = req.body;
+    const { Email, Password } = req.body;
     let userRes = await User.find({ username: Username });
     if (userRes.length) {
         let hashPass = userRes[0].password;

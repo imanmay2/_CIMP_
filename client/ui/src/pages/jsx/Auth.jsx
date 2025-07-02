@@ -22,42 +22,51 @@ const LoginPage = () => {
         }
     }, [message]);
 
-    useEffect(()=>{
-        let fetch=async()=>{
-            let response=await axios.get("http://localhost:8080/getData",{
-                withCredentials:true
-            })
+    // useEffect(()=>{
+    //     let fetch=async()=>{
+    //         let response=await axios.get("http://localhost:8080/getData",{
+    //             withCredentials:true
+    //         })
 
-            console.log(response.data.message);
-        }
-        fetch();
-    },[])
+    //         console.log(response.data.message);
+    //     }
+    //     fetch();
+    // },[])
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = async() => {
+        
         // TODO: Complete this logic
-
-        if (true) {
-
-        } else {
 
             if (!name || !email || !password || !confirmPassword || !role) {
                 showMessage('Please fill all fields', 'error');
                 return;
             }
 
-            if (password !== confirmPassword) {
+            
+            if(isLogin){
+                //sending to the Login Route.
+                const response=await axios.post("http://localhost:8080/login",{Email:email,Password:password},{
+                    withCredentials:true
+                });
+            }
+
+            else if(!isLogin){
+                //sending to the singup route
+                if (password !== confirmPassword) {
                 showMessage('Passwords do not match', 'error');
                 return;
             }
+                const response=await axios.post("http://localhost:8080/signUp",{Name:name,Email:email,Password:password,Role:role},{
+                    withCredentials:true
+                })
+            }
+           
+            // setTimeout(() => {
+            //     showMessage('Account created successfully!', 'success');
 
-
-            setTimeout(() => {
-                showMessage('Account created successfully!', 'success');
-
-                setTimeout(() => setIsLogin(true), 2000);
-            }, 1000);
-        }
+            //     setTimeout(() => setIsLogin(true), 2000);
+            // }, 1000);
+        
     };
 
     const showMessage = (text, type) => {
@@ -115,6 +124,7 @@ const LoginPage = () => {
                     <p>Sign in to access your dashboard</p>
                 </div>
 
+                {/* SignIn Page */}
                 {!isLogin && (
                     <>
                         <div className="form-group">
@@ -131,7 +141,7 @@ const LoginPage = () => {
                     </>
                 )}
 
-                <form onSubmit={handleSubmit}>
+                <form>
                     <div className="form-group">
                         <input
                             type="email"
@@ -230,7 +240,7 @@ const LoginPage = () => {
                         </div>
                     )}
 
-                    <button type="submit" className="login-button">
+                    <button type="submit" className="login-button" onClick={handleSubmit}>
                         Sign {isLogin ? "In" : "Up"}
                     </button>
 
