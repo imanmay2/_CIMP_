@@ -89,6 +89,7 @@ const AdminDashboard = () => {
     // Get unique categories for filter dropdown
     const uniqueCategories = ['All', ...new Set(clubs.map(club => club.category))];
 
+    
 
     return (
         <div className="ultra-premium-dashboard">
