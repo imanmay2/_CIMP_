@@ -67,7 +67,10 @@ app.get("/getData",(req,res)=>{
 // SignUp Route.
 app.post("/signUp", async (req, res) => {
     const { Name, Email, Password,Role } = req.body;
-    let userRes = await Admin.find({ email: Email});
+    let userRes1 = await Admin.find({ email:Email});
+    let userRes2 = await Student.find({ email:Email });
+    let userRes3 = await Faculty.find({ email:Email });
+    let userRes=userRes1 || userRes2 || userRes3  || [];
     if (!userRes.length) {
         try {
             console.log(req.body);
@@ -75,21 +78,21 @@ app.post("/signUp", async (req, res) => {
             let emailValidation = checkEmailValidation(Email);
             console.log(emailValidation);
             if (emailValidation == true) {
-                //Generate a username;
-                let userName = generateUsername(Email);
-                hashPass = await bcrypt.hash(Password, saltRounds);   //Encrytption of the password.
-                const user1 = new ({
-                    name: Name,
-                    email: Email,
-                    password: hashPass,
-                    username: userName,
-                });
-                await user1.save();
+                hashPass = await bcrypt.hash(Password, saltRounds);   //Encryption of the password.
+                if(Role==="Admin")
+                    /// yet to be done
+                // const user1 = new ({
+                //     name: Name,
+                //     email: Email,
+                //     password: hashPass,
+                //     role:Role,
+                // });
+                // await user1.save();
 
                 //cookies
-                res.cookie("login", "true", { secure: false });
-                res.cookie("username", userName, { secure: false });
-                res.cookie("name", Name, { secure: false });  // secure false as using http. not https.
+                // res.cookie("login", "true", { secure: false });
+                // res.cookie("username", userName, { secure: false });
+                // res.cookie("name", Name, { secure: false });  // secure false as using http. not https.
                 console.log("User Signed Up!!");
                 flag = 1;
                 res.status(200).json({ 'message': "User saved successfully", "flag": "success" });
@@ -105,6 +108,8 @@ app.post("/signUp", async (req, res) => {
     }
 });
 
+
+
 //login route.
 app.post("/login", async (req, res) => {
     let flag = 0;
@@ -112,24 +117,19 @@ app.post("/login", async (req, res) => {
     let userRes1 = await Admin.find({ email:Email});
     let userRes2 = await Student.find({ email:Email });
     let userRes3 = await Faculty.find({ email:Email });
-    let userRes=userRes1 || userRes2 || userRes3;
-    if (userRes.length) {
+    let userRes=userRes1 || userRes2 || userRes3 || [];
+    if (userRes.length){
         let hashPass = userRes[0].password;
         console.log(hashPass);
         bcrypt.compare(Password, hashPass, function (err, result) {
             if (result) {
                 flag = 1;
-                console.log("User logged in successfully");
-                ///setting up cookies.
-                res.cookie("login", "true", { secure: false });
-                res.cookie("name", userRes[0].name, { secure: false });
-                res.cookie("username", userRes[0].username, { secure: false });
-                res.json({ "message": "User Logged in Successfully", "flag": flag });
+                res.json({ "message": "User Logged in Successfully", "flag": "success",role:userRes[0].role });
             } else {
-                res.json({ "message": "Password is incorrect ! " });
+                res.json({ "message": "Password is incorrect ! ", "flag": "error" });
             }
         });
     } else {
-        res.json({ "message": "Username is incorrect ! " });
+        res.json({ "message": "Email is incorrect ! ", "flag": "error"});
     }
 });

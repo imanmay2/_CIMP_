@@ -7,7 +7,11 @@ const faculties=new mongoose.Schema({
     },
     email:{
         type:String,
-        
+        required:true
+    },
+    password:{
+        type:String,
+        required:true
     },
      name:{
         type:String,
@@ -15,16 +19,19 @@ const faculties=new mongoose.Schema({
     },
      address:{
         type:String,
-        required:true
     },
      club:{
         type:String,
         required:true
     },
-    department:{
+    category:{
         type:String,
         required:true
-    }
+    },
+    role:{
+        type:String,
+        required:true
+    },
 });
 
 const Faculty=new mongoose.model("Faculty",faculties);

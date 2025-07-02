@@ -19,6 +19,10 @@ const admins=new mongoose.Schema({
      address:{
         type:String,
     },
+    role:{
+        type:String,
+        required:true
+    },
 });
 
 const Admin=new mongoose.model("Admin",admins);

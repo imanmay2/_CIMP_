@@ -33,40 +33,48 @@ const LoginPage = () => {
     //     fetch();
     // },[])
 
-    const handleSubmit = async() => {
-        
+    const handleSubmit = async () => {
+
         // TODO: Complete this logic
 
-            if (!name || !email || !password || !confirmPassword || !role) {
-                showMessage('Please fill all fields', 'error');
-                return;
-            }
+        if (!name || !email || !password || !confirmPassword || !role) {
+            showMessage('Please fill all fields', 'error');
+            return;
+        }
 
-            
-            if(isLogin){
-                //sending to the Login Route.
-                const response=await axios.post("http://localhost:8080/login",{Email:email,Password:password},{
-                    withCredentials:true
-                });
-            }
 
-            else if(!isLogin){
-                //sending to the singup route
-                if (password !== confirmPassword) {
+        if (isLogin) {
+            //sending to the Login Route.
+            const response = await axios.post("http://localhost:8080/login", { Email: email, Password: password }, {
+                withCredentials: true
+            });
+            setTimeout(() => {
+                showMessage(response.data.message, response.data.flag);
+                setTimeout(() => setIsLogin(true), 2000);
+            }, 2000);
+        }
+
+        else if (!isLogin) {
+            //sending to the singup route
+            if (password !== confirmPassword) {
                 showMessage('Passwords do not match', 'error');
                 return;
             }
-                const response=await axios.post("http://localhost:8080/signUp",{Name:name,Email:email,Password:password,Role:role},{
-                    withCredentials:true
-                })
-            }
-           
-            // setTimeout(() => {
-            //     showMessage('Account created successfully!', 'success');
+            const response = await axios.post("http://localhost:8080/signUp", { Name: name, Email: email, Password: password, Role: role }, {
+                withCredentials: true
+            })
+             setTimeout(() => {
+                showMessage(response.data.message, response.data.flag);
+                setTimeout(() => setIsLogin(true), 2000);
+            }, 2000);
+        }
 
-            //     setTimeout(() => setIsLogin(true), 2000);
-            // }, 1000);
-        
+        // setTimeout(() => {
+        //     showMessage('Account created successfully!', 'success');
+
+        //     setTimeout(() => setIsLogin(true), 2000);
+        // }, 1000);
+
     };
 
     const showMessage = (text, type) => {
