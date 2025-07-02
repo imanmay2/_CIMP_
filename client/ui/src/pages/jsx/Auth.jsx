@@ -39,7 +39,7 @@ const LoginPage = () => {
 
         // TODO: Complete this logic
 
-        
+
 
 
         if (isLogin) {
@@ -47,52 +47,54 @@ const LoginPage = () => {
             const response = await axios.post("http://localhost:8080/login", { Email: email, Password: password }, {
                 withCredentials: true
             });
+            if (response.data.flag==="success") {
+                setEmail("");
+                setPassword("");
+                setRememberMe(false);
+                setMessage({ text: "", type: "" });
+                setName('');
+                setConfirmPassword('');
+                setRememberMe('');
+
+                navigate(`/${response.data.role}DashBoard`);
+            }
+
             setTimeout(() => {
                 showMessage(response.data.message, response.data.flag);
                 setTimeout(() => setIsLogin(true), 2000);
             }, 2000);
-
-            setEmail("");
-            setPassword("");
-            setRememberMe(false);
-            setMessage({ text: "", type: "" });
-            setIsLogin(true);
-            setName('');
-            setConfirmPassword('');
-            setRememberMe('');
-
-            navigate(`/${response.data.role}DashBoard`);
-
         }
 
         else if (!isLogin) {
-            //sending to the singup route
+            //sending to the signup route.
             if (!name || !email || !password || !confirmPassword || !role) {
-            showMessage('Please fill all fields', 'error');
-            return;
-        }
+                showMessage('Please fill all fields', 'error');
+                return;
+            }
             if (password !== confirmPassword) {
                 showMessage('Passwords do not match', 'error');
                 return;
             }
             const response = await axios.post("http://localhost:8080/signUp", { Name: name, Email: email, Password: password, Role: role }, {
                 withCredentials: true
-            })
+            });
+            if (response.data.flag==="success") {
+                setEmail("");
+                setPassword("");
+                setRememberMe(false);
+                setMessage({ text: "", type: "" });
+                setName('');
+                setConfirmPassword('');
+                setRememberMe('');
+
+                navigate(`/${role}DashBoard`);
+            }
             setTimeout(() => {
                 showMessage(response.data.message, response.data.flag);
                 setTimeout(() => setIsLogin(true), 2000);
             }, 2000);
         }
-        setEmail("");
-        setPassword("");
-        setRememberMe(false);
-        setMessage({ text: "", type: "" });
-        isLogin(true);
-        setName('');
-        setConfirmPassword('');
-        setRememberMe('');
 
-        navigate(`/${role}DashBoard`);
 
     };
 

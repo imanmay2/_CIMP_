@@ -31,7 +31,7 @@ app.use(cookieParser());
 
 
 //functions
-function checkEmailValidation(email) {
+function checkEmail(email) {
     if (email.includes('@')) {
         let arr = email.split('@');
         if (arr[arr.length - 1] == "gmail.com") {
@@ -40,11 +40,6 @@ function checkEmailValidation(email) {
     }
     return false;
 }
-
-function generateUsername(email) {
-    return email.split('@')[0];
-}
-
 
 main().catch(err => console.log(err));
 
@@ -74,7 +69,7 @@ app.post("/signUp", async (req, res) => {
         try {
             console.log(req.body);
             let hashPass = "";
-            let emailValidation = checkEmailValidation(Email);
+            let emailValidation = checkEmail(Email);
             console.log(emailValidation);
             if (emailValidation == true) {
                 hashPass = await bcrypt.hash(Password, saltRounds);   //Encryption of the password.
@@ -97,7 +92,7 @@ app.post("/signUp", async (req, res) => {
             res.status(500).json({ 'message': "Error in pushing the data. ", "flag": "error" });
         }
     } else {
-        res.json({ 'message': 'User already exists ! ' });
+        res.json({ 'message': 'User already exists ! ',flag:"error" });
     }
 });
 
