@@ -13,7 +13,7 @@ const clubSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-     departmment:{
+     department:{
         type:String,
         required:true
     },
