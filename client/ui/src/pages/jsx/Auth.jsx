@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../css/Auth.css';
-
+import axios from "axios";
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -22,9 +22,21 @@ const LoginPage = () => {
         }
     }, [message]);
 
+    useEffect(()=>{
+        let fetch=async()=>{
+            let response=await axios.get("http://localhost:8080/getData",{
+                withCredentials:true
+            })
+
+            console.log(response.data.message);
+        }
+        fetch();
+    },[])
+
     const handleSubmit = (e) => {
         e.preventDefault();
         // TODO: Complete this logic
+
         if (true) {
 
         } else {
@@ -231,8 +243,6 @@ const LoginPage = () => {
                     </div>
                 </form>
             </div>
-
-
         </div>
     );
 };
