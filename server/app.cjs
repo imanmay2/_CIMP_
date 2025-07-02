@@ -15,7 +15,7 @@ const Admin=require("./models/Admin.cjs");
 const Club=require("./models/clubs.cjs");
 const Faculty=require("./models/faculty.cjs");
 const Student=require("./models/students.cjs");
-
+const User=require("./models/User.cjs");
 
 const corsOptions = {
     origin: "http://localhost:5173",
@@ -66,12 +66,10 @@ app.get("/getData",(req,res)=>{
 
 // SignUp Route.
 app.post("/signUp", async (req, res) => {
+    console.log("SignUp Route Hit.");
     const { Name, Email, Password,Role } = req.body;
     console.log(req.body);
-    let userRes1 = await Admin.find({ email:Email});
-    let userRes2 = await Student.find({ email:Email });
-    let userRes3 = await Faculty.find({ email:Email });
-    let userRes=userRes1 || userRes2 || userRes3  || [];
+    let userRes = await User.find({ email:Email});
     if (!userRes.length) {
         try {
             console.log(req.body);
@@ -80,20 +78,14 @@ app.post("/signUp", async (req, res) => {
             console.log(emailValidation);
             if (emailValidation == true) {
                 hashPass = await bcrypt.hash(Password, saltRounds);   //Encryption of the password.
-                if(Role==="Admin")
                     /// yet to be done
-                // const user1 = new ({
-                //     name: Name,
-                //     email: Email,
-                //     password: hashPass,
-                //     role:Role,
-                // });
-                // await user1.save();
-
-                //cookies
-                // res.cookie("login", "true", { secure: false });
-                // res.cookie("username", userName, { secure: false });
-                // res.cookie("name", Name, { secure: false });  // secure false as using http. not https.
+                const user1 = new User({
+                    name: Name,
+                    email: Email,
+                    password: hashPass,
+                    role:Role,
+                });
+                await user1.save();
                 console.log("User Signed Up!!");
                 flag = 1;
                 res.status(200).json({ 'message': "User saved successfully", "flag": "success" });
@@ -113,20 +105,17 @@ app.post("/signUp", async (req, res) => {
 
 //login route.
 app.post("/login", async (req, res) => {
+    console.log("Login Route Hit.");
     let flag = 0;
     const { Email, Password } = req.body;
     console.log(req.body);
-    let userRes1 = await Admin.find({ email:Email});
-    let userRes2 = await Student.find({ email:Email });
-    let userRes3 = await Faculty.find({ email:Email });
-    let userRes=userRes1 || userRes2 || userRes3 || [];
+    let userRes = await User.find({ email:Email});
     if (userRes.length){
         let hashPass = userRes[0].password;
-        console.log(hashPass);
         bcrypt.compare(Password, hashPass, function (err, result) {
             if (result) {
                 flag = 1;
-                res.json({ "message": "User Logged in Successfully", "flag": "success",role:userRes[0].role });
+                res.json({ "message": "User Logged in Successfully", "flag": "success" ,role:userRes[0].role});
             } else {
                 res.json({ "message": "Password is incorrect ! ", "flag": "error" });
             }

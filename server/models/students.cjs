@@ -17,10 +17,6 @@ const students=new mongoose.Schema({
         type:String,
         required:true
     },
-    role:{
-        type:String,
-        required:true
-    },
 });
 
 const Student=new mongoose.model("Student",students);

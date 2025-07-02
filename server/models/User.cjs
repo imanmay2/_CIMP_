@@ -1,26 +1,23 @@
 const mongoose=require("mongoose");
 
-const faculties=new mongoose.Schema({
-    faculty_id:{
+const users=new mongoose.Schema({
+     name:{
         type:String,
         required:true
     },
-     address:{
-        type:String,
-    },
-     club:{
+     email:{
         type:String,
         required:true
     },
-    category:{
+     password:{
         type:String,
         required:true
     },
-    role:{
+     role:{
         type:String,
         required:true
     },
 });
 
-const Faculty=new mongoose.model("Faculty",faculties);
-module.exports=Faculty;
+const User=new mongoose.model("User",users);
+module.exports=User;

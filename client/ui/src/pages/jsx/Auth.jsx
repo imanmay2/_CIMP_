@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../css/Auth.module.css';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
-
     const [isLogin, setIsLogin] = useState(true);
     const [name, setName] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
     const [role, setRole] = useState('');
 
+
+    let navigate = useNavigate();
     useEffect(() => {
         if (message.text) {
             const timer = setTimeout(() => {
@@ -38,10 +39,7 @@ const LoginPage = () => {
 
         // TODO: Complete this logic
 
-        if (!name || !email || !password || !confirmPassword || !role) {
-            showMessage('Please fill all fields', 'error');
-            return;
-        }
+        
 
 
         if (isLogin) {
@@ -53,10 +51,26 @@ const LoginPage = () => {
                 showMessage(response.data.message, response.data.flag);
                 setTimeout(() => setIsLogin(true), 2000);
             }, 2000);
+
+            setEmail("");
+            setPassword("");
+            setRememberMe(false);
+            setMessage({ text: "", type: "" });
+            setIsLogin(true);
+            setName('');
+            setConfirmPassword('');
+            setRememberMe('');
+
+            navigate(`/${response.data.role}DashBoard`);
+
         }
 
         else if (!isLogin) {
             //sending to the singup route
+            if (!name || !email || !password || !confirmPassword || !role) {
+            showMessage('Please fill all fields', 'error');
+            return;
+        }
             if (password !== confirmPassword) {
                 showMessage('Passwords do not match', 'error');
                 return;
@@ -69,12 +83,16 @@ const LoginPage = () => {
                 setTimeout(() => setIsLogin(true), 2000);
             }, 2000);
         }
+        setEmail("");
+        setPassword("");
+        setRememberMe(false);
+        setMessage({ text: "", type: "" });
+        isLogin(true);
+        setName('');
+        setConfirmPassword('');
+        setRememberMe('');
 
-        // setTimeout(() => {
-        //     showMessage('Account created successfully!', 'success');
-
-        //     setTimeout(() => setIsLogin(true), 2000);
-        // }, 1000);
+        navigate(`/${role}DashBoard`);
 
     };
 

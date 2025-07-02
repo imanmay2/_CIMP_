@@ -2,13 +2,30 @@ import { useState } from 'react'
 import LoginPage from './pages/jsx/Auth'
 import './App.css'
 import AdminDashboard from './pages/jsx/AdminDashboard'
-
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 function App() {
-
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <LoginPage/>
+    },
+    {
+      path: "/adminDashBoard",
+      element:<AdminDashboard/>
+    },
+    {
+      path: "/presidentDashBoard",
+      element:<AdminDashboard/>
+    },
+    {
+      path: "/facultyDashBoard",
+      element:<AdminDashboard/>
+    }
+  ])
   return (
-    <LoginPage />
-    // <AdminDashboard />
+    <>
+      <RouterProvider router={router} />
+    </>
   )
 }
-
-export default App
+export default App;
