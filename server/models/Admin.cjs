@@ -3,6 +3,13 @@ const mongoose=require("mongoose");
 const admins=new mongoose.Schema({
     admin_id:{
         type:String,
+    },
+    email:{
+        type:String,
+        required:true
+    },
+    password:{
+        type:String,
         required:true
     },
      name:{
@@ -11,7 +18,6 @@ const admins=new mongoose.Schema({
     },
      address:{
         type:String,
-        required:true
     },
 });
 

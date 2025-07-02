@@ -67,7 +67,7 @@ app.get("/getData",(req,res)=>{
 // SignUp Route.
 app.post("/signUp", async (req, res) => {
     const { Name, Email, Password,Role } = req.body;
-    let userRes = await User.find({ email: Email });
+    let userRes = await Admin.find({ email: Email});
     if (!userRes.length) {
         try {
             console.log(req.body);
@@ -109,7 +109,10 @@ app.post("/signUp", async (req, res) => {
 app.post("/login", async (req, res) => {
     let flag = 0;
     const { Email, Password } = req.body;
-    let userRes = await User.find({ username: Username });
+    let userRes1 = await Admin.find({ email:Email});
+    let userRes2 = await Student.find({ email:Email });
+    let userRes3 = await Faculty.find({ email:Email });
+    let userRes=userRes1 || userRes2 || userRes3;
     if (userRes.length) {
         let hashPass = userRes[0].password;
         console.log(hashPass);
