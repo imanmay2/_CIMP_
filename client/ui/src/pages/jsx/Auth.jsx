@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../css/Auth.css';
+import '../css/Auth.module.css';
 import axios from "axios";
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -82,17 +82,17 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="login-container">
+        <div className={styles.loginContainer}>
             {/* Toggle for authentication */}
-            <div className="auth-toggle">
+            <div className={styles.authToggle}>
                 <button
-                    className={isLogin ? 'active' : ''}
+                    className={isLogin ? styles.active : ''}
                     onClick={() => setIsLogin(true)}
                 >
                     Login
                 </button>
                 <button
-                    className={!isLogin ? 'active' : ''}
+                    className={!isLogin ? styles.active : ''}
                     onClick={() => setIsLogin(false)}
                 >
                     Sign Up
@@ -101,7 +101,7 @@ const LoginPage = () => {
 
             {/* Message Notification */}
             {message.text && (
-                <div className={`message-box ${message.type}`}>
+                <div className={`${styles.messageBox} ${styles[message.type]}`}>
                     <svg viewBox="0 0 20 20" fill="currentColor">
                         {message.type === 'error' ? (
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -114,9 +114,9 @@ const LoginPage = () => {
             )}
 
             {/* Login Card */}
-            <div className="login-card">
-                <div className="login-header">
-                    <div className="logo">
+            <div className={styles.loginCard}>
+                <div className={styles.loginHeader}>
+                    <div className={styles.logo}>
                         <svg viewBox="0 0 60 60" fill="none">
                             <circle cx="30" cy="30" r="30" fill="url(#logo-gradient)" />
                             <path d="M30 15L40 25H35V35H40L30 45L20 35H25V25H20L30 15Z" fill="white" />
@@ -135,7 +135,7 @@ const LoginPage = () => {
                 {/* SignIn Page */}
                 {!isLogin && (
                     <>
-                        <div className="form-group">
+                        <div className={styles.formGroup}>
                             <input
                                 type="text"
                                 id="name"
@@ -162,7 +162,7 @@ const LoginPage = () => {
                         <label htmlFor="email">Email Address</label>
                     </div>
 
-                    <div className="form-group">
+                    <div className={styles.formGroup}>
                         <input
                             type="password"
                             id="password"
@@ -175,7 +175,7 @@ const LoginPage = () => {
                     </div>
 
                     {!isLogin && (
-                        <div className="form-group">
+                        <div className={styles.formGroup}>
                             <input
                                 type="password"
                                 id="confirmPassword"
@@ -188,8 +188,8 @@ const LoginPage = () => {
                         </div>
                     )}
 
-                    {isLogin && <div className="form-options">
-                        <div className="remember-me">
+                    {isLogin && <div className={styles.formOptions}>
+                        <div className={styles.rememberMe}>
                             <input
                                 type="checkbox"
                                 id="remember-me"
@@ -200,7 +200,7 @@ const LoginPage = () => {
                         </div>
                         <button
                             type="button"
-                            className="forgot-password"
+                            className={styles.forgotPassword}
                             onClick={() => showMessage('Password reset link will be sent to your email.', 'info')}
                         >
                             Forgot password?
@@ -208,12 +208,12 @@ const LoginPage = () => {
                     </div>}
 
                     {!isLogin && (
-                        <div className="form-group role-selection">
+                        <div className={styles.roleSelection}>
                             <label>Select Your Role</label>
-                            <div className="role-options">
+                            <div className={styles.roleOptions}>
                                 <button
                                     type="button"
-                                    className={role === 'admin' ? 'active' : ''}
+                                    className={role === 'admin' ? styles.active : ''}
                                     onClick={() => setRole('admin')}
                                 >
                                     <svg viewBox="0 0 24 24" fill="none">
@@ -224,7 +224,7 @@ const LoginPage = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    className={role === 'student' ? 'active' : ''}
+                                    className={role === 'student' ? styles.active : ''}
                                     onClick={() => setRole('student')}
                                 >
                                     <svg viewBox="0 0 24 24" fill="none">
@@ -235,7 +235,7 @@ const LoginPage = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    className={role === 'faculty' ? 'active' : ''}
+                                    className={role === 'faculty' ? styles.active : ''}
                                     onClick={() => setRole('faculty')}
                                 >
                                     <svg viewBox="0 0 24 24" fill="none">
@@ -252,7 +252,7 @@ const LoginPage = () => {
                         Sign {isLogin ? "In" : "Up"}
                     </button>
 
-                    <div className="signup-link">
+                    <div className={styles.signupLink}>
                         {isLogin ? (
                             <>Don't have an account? <button onClick={() => setIsLogin(false)}>Sign up</button></>
                         ) : (
