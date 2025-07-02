@@ -67,6 +67,7 @@ app.get("/getData",(req,res)=>{
 // SignUp Route.
 app.post("/signUp", async (req, res) => {
     const { Name, Email, Password,Role } = req.body;
+    console.log(req.body);
     let userRes1 = await Admin.find({ email:Email});
     let userRes2 = await Student.find({ email:Email });
     let userRes3 = await Faculty.find({ email:Email });
@@ -114,6 +115,7 @@ app.post("/signUp", async (req, res) => {
 app.post("/login", async (req, res) => {
     let flag = 0;
     const { Email, Password } = req.body;
+    console.log(req.body);
     let userRes1 = await Admin.find({ email:Email});
     let userRes2 = await Student.find({ email:Email });
     let userRes3 = await Faculty.find({ email:Email });

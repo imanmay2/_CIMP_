@@ -6,8 +6,8 @@ import AdminDashboard from './pages/jsx/AdminDashboard'
 function App() {
 
   return (
-    // <LoginPage />
-    <AdminDashboard />
+    <LoginPage />
+    // <AdminDashboard />
   )
 }
 

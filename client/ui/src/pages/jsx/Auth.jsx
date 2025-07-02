@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../css/Auth.module.css';
+import styles from '../css/Auth.module.css';
 import axios from "axios";
 const LoginPage = () => {
     const [email, setEmail] = useState('');
