@@ -17,6 +17,13 @@ const users=new mongoose.Schema({
         type:String,
         required:true
     },
+     address:{
+        type:String,
+    },id:{
+        //regNo, faculty_id
+        type:String,
+        required:true
+    }
 });
 
 const User=new mongoose.model("User",users);

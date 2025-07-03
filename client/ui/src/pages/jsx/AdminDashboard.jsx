@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import '../css/AdminDashboard.css';
-
+import axios from "axios";
 const AdminDashboard = () => {
     // State for managing the list of clubs
     const [clubs, setClubs] = useState([
-        { id: 'c1', name: 'Literary Club', president: 'Alice Smith', facultyCoordinator: 'Dr. John Doe', membersCount: 120, category: 'Academic', status: 'Active' },
-        { id: 'c2', name: 'Robotics Club', president: 'Bob Johnson', facultyCoordinator: 'Prof. Jane Roe', membersCount: 85, category: 'Technical', status: 'Active' },
-        { id: 'c3', name: 'Sports Club', president: 'Charlie Brown', facultyCoordinator: 'Mr. David Lee', membersCount: 250, category: 'Sports', status: 'Active' },
-        { id: 'c4', name: 'Photography Club', president: 'Diana Prince', facultyCoordinator: 'Ms. Emily White', membersCount: 60, category: 'Arts', status: 'Active' },
-        { id: 'c5', name: 'Debate Society', president: 'Eve Adams', facultyCoordinator: 'Dr. Frank Green', membersCount: 95, category: 'Academic', status: 'Inactive' },
-        { id: 'c6', name: 'Chess Club', president: 'Grace Hopper', facultyCoordinator: 'Mr. Alan Turing', membersCount: 40, category: 'Academic', status: 'Active' },
-        { id: 'c7', name: 'Coding Club', president: 'Ivan Ivanov', facultyCoordinator: 'Prof. Maria Sklodowska', membersCount: 150, category: 'Technical', status: 'Active' },
-        { id: 'c8', name: 'Drama Club', president: 'Judy Garland', facultyCoordinator: 'Ms. Olivia Newton', membersCount: 70, category: 'Arts', status: 'Inactive' },
+
+        //error in maxMemberCount
+        // { id: 'c1', name: 'Literary Club', president: 'Alice Smith', facultyCoordinator: 'Dr. John Doe', membersCount: 120, category: 'Academic', status: 'Active' },
+        // { id: 'c2', name: 'Robotics Club', president: 'Bob Johnson', facultyCoordinator: 'Prof. Jane Roe', membersCount: 85, category: 'Technical', status: 'Active' },
+        // { id: 'c3', name: 'Sports Club', president: 'Charlie Brown', facultyCoordinator: 'Mr. David Lee', membersCount: 250, category: 'Sports', status: 'Active' },
+        // { id: 'c4', name: 'Photography Club', president: 'Diana Prince', facultyCoordinator: 'Ms. Emily White', membersCount: 60, category: 'Arts', status: 'Active' },
+        // { id: 'c5', name: 'Debate Society', president: 'Eve Adams', facultyCoordinator: 'Dr. Frank Green', membersCount: 95, category: 'Academic', status: 'Inactive' },
+        // { id: 'c6', name: 'Chess Club', president: 'Grace Hopper', facultyCoordinator: 'Mr. Alan Turing', membersCount: 40, category: 'Academic', status: 'Active' },
+        // { id: 'c7', name: 'Coding Club', president: 'Ivan Ivanov', facultyCoordinator: 'Prof. Maria Sklodowska', membersCount: 150, category: 'Technical', status: 'Active' },
+        // { id: 'c8', name: 'Drama Club', president: 'Judy Garland', facultyCoordinator: 'Ms. Olivia Newton', membersCount: 70, category: 'Arts', status: 'Inactive' },
     ]);
 
     // State for search and filter inputs
@@ -34,10 +36,10 @@ const AdminDashboard = () => {
         setMessageType(type);
         setTimeout(() => {
             setMessage('');
-        }, 3000); // Message disappears after 3 seconds
+        }, 3000); // Message disappears after 3 seconds.
     };
 
-    // Filtered clubs based on search term and filter selections
+    // Filtered clubs based on search term and filter selections.
     const filteredClubs = clubs.filter(club => {
         const matchesSearch = club.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             club.category.toLowerCase().includes(searchTerm.toLowerCase());
@@ -48,31 +50,38 @@ const AdminDashboard = () => {
         return matchesSearch && matchesCategory && matchesStatus;
     });
 
-    // Handle input changes for the new club form
+    // Handle input changes for the new club form.
     const handleNewClubChange = (e) => {
         const { name, value } = e.target;
         setNewClub(prev => ({ ...prev, [name]: value }));
     };
 
     // Handle submission of the new club form
-    const handleCreateClubSubmit = (e) => {
+    const handleCreateClubSubmit = async (e) => {
         e.preventDefault();
-        if (!newClub.name || !newClub.president || !newClub.facultyCoordinator || !newClub.membersCount) {
+        if (!newClub.name || !newClub.president || !newClub.facultyCoordinator || !newClub.maxMemberCount) {
             showMessageBox('Please fill in all required fields for the new club.', 'error');
             return;
         }
         const newId = `c${clubs.length + 1}`; // Simple ID generation
-        setClubs(prev => [...prev, { id: newId, ...newClub, membersCount: parseInt(newClub.membersCount) }]);
-        showMessageBox(`Club "${newClub.name}" created successfully!`, 'success');
-        setNewClub({ // Reset form
-            name: '',
-            president: '',
-            facultyCoordinator: '',
-            membersCount: '',
-            category: 'Academic',
-            status: 'Active',
-        });
-        setShowCreateClubModal(false); // Close modal
+        //Post request to the backend.
+        const response = await axios.post("http://localhost:8080/createNewClub", newClub, { withCredentials: true });
+        console.log(response.data);
+        if (response.data.flag==="success") {
+            setClubs(prev => [...prev, { id: newId, ...newClub, membersCount: parseInt(newClub.maxMemberCount) }]);
+            showMessageBox(`Club "${newClub.name}" created successfully!`, response.data.flag);
+            setNewClub({ // Reset form
+                name: '',
+                president: '',
+                facultyCoordinator: '',
+                membersCount: '',
+                category: 'Academic',
+                status: 'Active',
+            });
+            setShowCreateClubModal(false); // Close modal
+            return;
+        }
+        showMessageBox(response.data.message, response.data.flag);
     };
 
     // Simulate redirection for quick actions
@@ -89,7 +98,7 @@ const AdminDashboard = () => {
     // Get unique categories for filter dropdown
     const uniqueCategories = ['All', ...new Set(clubs.map(club => club.category))];
 
-    
+
 
     return (
         <div className="ultra-premium-dashboard">

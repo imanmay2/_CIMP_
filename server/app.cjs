@@ -61,10 +61,8 @@ app.get("/getData",(req,res)=>{
 
 // SignUp Route.
 app.post("/signUp", async (req, res) => {
-    console.log("SignUp Route Hit.");
-    const { Name, Email, Password,Role } = req.body;
-    console.log(req.body);
-    let userRes = await User.find({ email:Email});
+    const { Name, Email, Password,Role,id } = req.body;
+    let userRes = await User.find({ email:Email,id:id});
     if (!userRes.length) {
         try {
             console.log(req.body);
@@ -79,8 +77,21 @@ app.post("/signUp", async (req, res) => {
                     email: Email,
                     password: hashPass,
                     role:Role,
+                    id:id //either regNo or faculty_id or Admin_id
                 });
                 await user1.save();
+                if(Role==="faculty"){
+                    const faculty1=new Faculty({
+                    userId:user1._id
+                });
+                faculty1.save();
+                }
+                 else if(Role==="president"){
+                    const student1=new Student({
+                    userId:user1._id
+                });
+                student1.save();
+                }
                 console.log("User Signed Up!!");
                 flag = 1;
                 res.status(200).json({ 'message': "User saved successfully", "flag": "success" });
@@ -100,10 +111,8 @@ app.post("/signUp", async (req, res) => {
 
 //login route.
 app.post("/login", async (req, res) => {
-    console.log("Login Route Hit.");
-    let flag = 0;
+    // let flag = 0;
     const { Email, Password } = req.body;
-    console.log(req.body);
     let userRes = await User.find({ email:Email});
     if (userRes.length){
         let hashPass = userRes[0].password;
@@ -117,5 +126,47 @@ app.post("/login", async (req, res) => {
         });
     } else {
         res.json({ "message": "Email is incorrect ! ", "flag": "error"});
+    }
+});
+
+
+
+//creating a new Club 
+app.post("/createNewClub",async(req,res)=>{
+    //  name: '', president: '', facultyCoordinator: '', maxMemberCount: '',
+    //     category: '', status: 'Active'
+    let {name,president,facultyCoordinator,maxMemberCount,category,status}=req.body;
+    console.log(req.body);
+    try{
+        let clubDetails=await Club.find({clubName:name});
+        let facultyDetails=await Faculty.find({faculty_id:facultyCoordinator}).populate('userId');
+        let studentDetails=await Student.find({regNo:president}).populate('userId');
+        console.log("faculty_details_: "+facultyDetails);
+        console.log("Student _deatils:  "+studentDetails);
+        //also check for the faculty and president already present in the database or not.
+        if(!clubDetails.length){
+            if(facultyDetails.length){
+                if(studentDetails.length){
+                    let newClub_=new Club({
+                        clubName:name,
+                        clubPresident:studentDetails[0].userId.id,
+                        category:category,
+                        faculty:facultyDetails[0].userId.id,
+                        status:status,
+                        maxMembers:maxMemberCount
+                    });
+                    newClub_.save();
+                    res.json({message:"Club Created Successfully",flag:"success"});
+                } else{
+                    res.json({message:"President Not Found",flag:"error"});
+                }
+            }else{
+                res.json({message:"Faculty Not Found",flag:"error"});
+            }
+        } else{
+            res.json({message:"Club Already Exists",flag:"error"});
+        }
+    } catch(err){
+        res.json({message:err.message,flag:"error"});
     }
 });

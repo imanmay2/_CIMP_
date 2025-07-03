@@ -1,26 +1,14 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 
-const faculties=new mongoose.Schema({
-    faculty_id:{
-        type:String,
-        required:true
-    },
-     address:{
-        type:String,
-    },
-     club:{
-        type:String,
-        required:true
-    },
-    category:{
-        type:String,
-        required:true
-    },
-    role:{
-        type:String,
-        required:true
-    },
+const faculties = new mongoose.Schema({
+    club: {
+        type: String,
+        // required: true
+    }, userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
-const Faculty=new mongoose.model("Faculty",faculties);
-module.exports=Faculty;
+const Faculty = new mongoose.model("Faculty", faculties);
+module.exports = Faculty;

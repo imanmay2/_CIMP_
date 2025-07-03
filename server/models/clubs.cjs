@@ -6,32 +6,37 @@ const clubSchema = new mongoose.Schema({
         required: true
     },
     clubPresident: {
+        //stores the regNo.
         type: String,
         required: true
     },
     description: {
         type: String,
-        required: true
     },
     category: {
         type: String,
         required: true
     },
     members: [{
-        type: String,
-        required: true
+        regNo:{
+            type:String,
+        },
+        Name:{
+            type:String
+        }
     }],
     faculty: {
+        //stores the faculty_id
         type: String,
         required: true
     },
     createdAt: {
         type: String,
-        required: true
+        
     },
     updatedAt: {
         type: String,
-        required: true
+        // required: true
     },
     status: {
         type: String,
@@ -41,7 +46,6 @@ const clubSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-
 });
 
 const Club = new mongoose.model("Club", clubSchema);

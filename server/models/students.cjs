@@ -1,23 +1,17 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 
-const students=new mongoose.Schema({
-    regNo:{
-        type:String,
-        required:true
+const students = new mongoose.Schema({
+    branch: {
+        type: String,
+        // required: true
+    },club:{
+        type:String
     },
-     name:{
-        type:String,
-        required:true
-    },
-     address:{
-        type:String,
-        required:true
-    },
-     branch:{
-        type:String,
-        required:true
-    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
-const Student=new mongoose.model("Student",students);
-module.exports=Student;
+const Student = new mongoose.model("Student", students);
+module.exports = Student;
