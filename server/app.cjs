@@ -80,6 +80,11 @@ app.post("/signUp", async (req, res) => {
                     id:id //either regNo or faculty_id or Admin_id
                 });
                 await user1.save();
+                
+                //cookies
+                res.cookie("login", "true", { secure: false });
+                // res.cookie("username", userName, { secure: false });
+                // res.cookie("name", Name, { secure: false });  // secure false as using http. not https.
                 if(Role==="faculty"){
                     const faculty1=new Faculty({
                     userId:user1._id
@@ -169,4 +174,12 @@ app.post("/createNewClub",async(req,res)=>{
     } catch(err){
         res.json({message:err.message,flag:"error"});
     }
+});
+
+
+
+//logging out.
+app.get("/logout", async (req, res) => {
+    res.cookie("login", "false", { secure: false });
+    res.json({ message:"Logged Out Sucessfully","flag": "success" });
 });

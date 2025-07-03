@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import '../css/AdminDashboard.css';
 import axios from "axios";
 import NotificationsSection from '../../components/jsx/NotificationSection';
-
+import {useNavigate} from "react-router-dom";
 const AdminDashboard = () => {
+     const navigate=useNavigate();
     // State for managing the list of clubs
     const [clubs, setClubs] = useState([
-
+       
         //error in maxMemberCount
         // { id: 'c1', name: 'Literary Club', president: 'Alice Smith', facultyCoordinator: 'Dr. John Doe', membersCount: 120, category: 'Academic', status: 'Active' },
         // { id: 'c2', name: 'Robotics Club', president: 'Bob Johnson', facultyCoordinator: 'Prof. Jane Roe', membersCount: 85, category: 'Technical', status: 'Active' },
@@ -140,9 +141,11 @@ const AdminDashboard = () => {
                                         {/* User Id to be given below */}
                                         <span>12458796</span>
                                     </div>
-                                    <div className="dropdown-item" onClick={() => {
-                                        // Add your logout logic here
-                                        console.log('Logging out...');
+                                    <div className="dropdown-item" onClick={async() => {
+                                        // Add your logout logic here.
+                                        const response=await axios.get("http://localhost:8080/logout",{withCredentials:true});
+                                        navigate("/");
+                                        
                                     }}>
                                         <i className="icon-logout">⎋</i>
                                         <span>Logout</span>
