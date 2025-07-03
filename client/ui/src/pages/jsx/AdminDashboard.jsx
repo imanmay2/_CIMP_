@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../css/AdminDashboard.css';
 import axios from "axios";
 import NotificationsSection from '../../components/jsx/NotificationSection';
@@ -32,6 +32,7 @@ const AdminDashboard = () => {
 
 
     const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef(null);
 
     // Function to display messages in the custom message box
     const showMessageBox = (msg, type = 'success') => {
@@ -70,7 +71,7 @@ const AdminDashboard = () => {
         //Post request to the backend.
         const response = await axios.post("http://localhost:8080/createNewClub", newClub, { withCredentials: true });
         console.log(response.data);
-        if (response.data.flag==="success") {
+        if (response.data.flag === "success") {
             setClubs(prev => [...prev, { id: newId, ...newClub, membersCount: parseInt(newClub.maxMemberCount) }]);
             showMessageBox(`Club "${newClub.name}" created successfully!`, response.data.flag);
             setNewClub({ // Reset form
@@ -101,6 +102,21 @@ const AdminDashboard = () => {
     // Get unique categories for filter dropdown
     const uniqueCategories = ['All', ...new Set(clubs.map(club => club.category))];
 
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        }
+
+        // Add event listener
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            // Clean up
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
 
     return (
@@ -124,7 +140,7 @@ const AdminDashboard = () => {
                         </span>
 
                         {/* profile button */}
-                        <div className="profile-dropdown">
+                        <div className="profile-dropdown" ref={dropdownRef}>
                             <button className="profile-button" onClick={() => setShowDropdown(!showDropdown)}>
                                 <div className="profile-avatar">
                                     <span>A</span> {/* Replace with admin initial or image */}
