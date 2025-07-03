@@ -95,8 +95,6 @@ const LoginPage = () => {
                 setTimeout(() => setIsLogin(true), 2000);
             }, 2000);
         }
-
-
     };
 
     const showMessage = (text, type) => {

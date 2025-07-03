@@ -20,7 +20,7 @@ const users=new mongoose.Schema({
      address:{
         type:String,
     },id:{
-        //regNo, faculty_id
+        //regNo, faculty_id, admin_id
         type:String,
         required:true
     }
