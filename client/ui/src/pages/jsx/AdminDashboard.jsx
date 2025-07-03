@@ -1,34 +1,34 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import '../css/AdminDashboard.css';
 import axios from "axios";
 import NotificationsSection from '../../components/jsx/NotificationSection';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 const AdminDashboard = () => {
-     const navigate=useNavigate();
+    const navigate = useNavigate();
     // State for managing the list of clubs
     const [clubs, setClubs] = useState([]);
-    const [filteredClubs_,setFilteredClubs_] = useState([]);
+    const [filteredClubs_, setFilteredClubs_] = useState([]);
 
-useEffect(() => {
-    const fetchClubs = async () => {
-        try {
-            const response = await axios.get("http://localhost:8080/getClubData", {
-                withCredentials: true
-            });
-            console.log(response.data);
+    useEffect(() => {
+        const fetchClubs = async () => {
+            try {
+                const response = await axios.get("http://localhost:8080/getClubData", {
+                    withCredentials: true
+                });
+                console.log(response.data);
 
-            ///fix the bug.
-            if(response.data != undefined)
-                setClubs(response.data);
-        } catch (error) {
-            console.error("Failed to fetch clubs:", error);
-        }
-    };
+                ///fix the bug.
+                if (response.data != undefined)
+                    setClubs(response.data);
+            } catch (error) {
+                console.error("Failed to fetch clubs:", error);
+            }
+        };
 
-    fetchClubs();
-}, [clubs, setClubs]);
+        fetchClubs();
+    }, [clubs, setClubs]);
 
     // State for search and filter inputs
     const [searchTerm, setSearchTerm] = useState('');
@@ -58,14 +58,14 @@ useEffect(() => {
     // Filtered clubs based on search term and filter selections.
     const filteredClubs = clubs.filter(club => {
         if (club != undefined && club.name != undefined && club.category != undefined && club.status != undefined) {
-        const matchesSearch = club.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            club.category.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesSearch = club.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                club.category.toLowerCase().includes(searchTerm.toLowerCase());
 
-        const matchesCategory = filterCategory === 'All' || club.category === filterCategory;
-        const matchesStatus = filterStatus === 'All' || club.status === filterStatus;
+            const matchesCategory = filterCategory === 'All' || club.category === filterCategory;
+            const matchesStatus = filterStatus === 'All' || club.status === filterStatus;
 
-        setFilteredClubs_(matchesSearch && matchesCategory && matchesStatus);
-        return matchesSearch && matchesCategory && matchesStatus;
+            setFilteredClubs_(matchesSearch && matchesCategory && matchesStatus);
+            return matchesSearch && matchesCategory && matchesStatus;
         }
     });
 
@@ -171,11 +171,11 @@ useEffect(() => {
                                         {/* User Id to be given below */}
                                         <span>{Cookies.get('id')}</span>
                                     </div>
-                                    <div className="dropdown-item" onClick={async() => {
+                                    <div className="dropdown-item" onClick={async () => {
                                         // Add your logout logic here.
-                                        const response=await axios.get("http://localhost:8080/logout",{withCredentials:true});
+                                        const response = await axios.get("http://localhost:8080/logout", { withCredentials: true });
                                         navigate("/");
-                                        
+
                                     }}>
                                         <i className="icon-logout">⎋</i>
                                         <span>Logout</span>
@@ -252,7 +252,7 @@ useEffect(() => {
                     </div>
 
                     {filteredClubs_.length > 0 ? (
-                        
+
                         <div className="data-table-container">
                             <table className="data-table">
                                 <thead>
@@ -269,38 +269,38 @@ useEffect(() => {
                                 <tbody>
                                     {filteredClubs_.map(club => (
                                         (club != undefined && club._id != undefined && club._id != null && club._id != '') ?
-                                        <tr key={club._id}>
-                                            <td>
-                                                <div className="club-name">
-                                                    <div className="club-avatar"
-                                                        style={{ background: getRandomColor() }}>
-                                                        {club.name.charAt(0)}
+                                            <tr key={club._id}>
+                                                <td>
+                                                    <div className="club-name">
+                                                        <div className="club-avatar"
+                                                            style={{ background: getRandomColor() }}>
+                                                            {club.name.charAt(0)}
+                                                        </div>
+                                                        {club.name}
                                                     </div>
-                                                    {club.name}
-                                                </div>
-                                            </td>
-                                            <td>{club.president}</td>
-                                            <td>{club.faculty}</td>
-                                            <td>{club.members.length}</td>
-                                            <td>
-                                                <span className="category-tag">
-                                                    {club.category}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span className={`status-badge ${club.status.toLowerCase()}`}>
-                                                    {club.status}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <button className="table-action">
-                                                    <i className="icon-edit"></i>
-                                                </button>
-                                                <button className="table-action">
-                                                    <i className="icon-more"></i>
-                                                </button>
-                                            </td>
-                                        </tr>:null
+                                                </td>
+                                                <td>{club.president}</td>
+                                                <td>{club.faculty}</td>
+                                                <td>{club.members.length}</td>
+                                                <td>
+                                                    <span className="category-tag">
+                                                        {club.category}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={`status-badge ${club.status.toLowerCase()}`}>
+                                                        {club.status}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <button className="table-action">
+                                                        <i className="icon-edit"></i>
+                                                    </button>
+                                                    <button className="table-action">
+                                                        <i className="icon-more"></i>
+                                                    </button>
+                                                </td>
+                                            </tr> : null
                                     ))}
                                 </tbody>
                             </table>
