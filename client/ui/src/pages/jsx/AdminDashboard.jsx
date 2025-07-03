@@ -2,21 +2,33 @@ import React, { useState, useRef, useEffect } from 'react';
 import '../css/AdminDashboard.css';
 import axios from "axios";
 import NotificationsSection from '../../components/jsx/NotificationSection';
-
+import {useNavigate} from "react-router-dom";
+import Cookies from 'js-cookie';
+import { useEffect } from 'react';
 const AdminDashboard = () => {
+     const navigate=useNavigate();
     // State for managing the list of clubs
-    const [clubs, setClubs] = useState([
+    const [clubs, setClubs] = useState([]);
+    const [filteredClubs_,setFilteredClubs_] = useState([]);
 
-        //error in maxMemberCount
-        // { id: 'c1', name: 'Literary Club', president: 'Alice Smith', facultyCoordinator: 'Dr. John Doe', membersCount: 120, category: 'Academic', status: 'Active' },
-        // { id: 'c2', name: 'Robotics Club', president: 'Bob Johnson', facultyCoordinator: 'Prof. Jane Roe', membersCount: 85, category: 'Technical', status: 'Active' },
-        // { id: 'c3', name: 'Sports Club', president: 'Charlie Brown', facultyCoordinator: 'Mr. David Lee', membersCount: 250, category: 'Sports', status: 'Active' },
-        // { id: 'c4', name: 'Photography Club', president: 'Diana Prince', facultyCoordinator: 'Ms. Emily White', membersCount: 60, category: 'Arts', status: 'Active' },
-        // { id: 'c5', name: 'Debate Society', president: 'Eve Adams', facultyCoordinator: 'Dr. Frank Green', membersCount: 95, category: 'Academic', status: 'Inactive' },
-        // { id: 'c6', name: 'Chess Club', president: 'Grace Hopper', facultyCoordinator: 'Mr. Alan Turing', membersCount: 40, category: 'Academic', status: 'Active' },
-        // { id: 'c7', name: 'Coding Club', president: 'Ivan Ivanov', facultyCoordinator: 'Prof. Maria Sklodowska', membersCount: 150, category: 'Technical', status: 'Active' },
-        // { id: 'c8', name: 'Drama Club', president: 'Judy Garland', facultyCoordinator: 'Ms. Olivia Newton', membersCount: 70, category: 'Arts', status: 'Inactive' },
-    ]);
+useEffect(() => {
+    const fetchClubs = async () => {
+        try {
+            const response = await axios.get("http://localhost:8080/getClubData", {
+                withCredentials: true
+            });
+            console.log(response.data);
+
+            ///fix the bug.
+            if(response.data != undefined)
+                setClubs(response.data);
+        } catch (error) {
+            console.error("Failed to fetch clubs:", error);
+        }
+    };
+
+    fetchClubs();
+}, [clubs, setClubs]);
 
     // State for search and filter inputs
     const [searchTerm, setSearchTerm] = useState('');
@@ -45,13 +57,16 @@ const AdminDashboard = () => {
 
     // Filtered clubs based on search term and filter selections.
     const filteredClubs = clubs.filter(club => {
+        if (club != undefined && club.name != undefined && club.category != undefined && club.status != undefined) {
         const matchesSearch = club.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             club.category.toLowerCase().includes(searchTerm.toLowerCase());
 
         const matchesCategory = filterCategory === 'All' || club.category === filterCategory;
         const matchesStatus = filterStatus === 'All' || club.status === filterStatus;
 
+        setFilteredClubs_(matchesSearch && matchesCategory && matchesStatus);
         return matchesSearch && matchesCategory && matchesStatus;
+        }
     });
 
     // Handle input changes for the new club form.
@@ -154,11 +169,13 @@ const AdminDashboard = () => {
                                     <div className="dropdown-item">
                                         <i className="icon-user">👤</i>
                                         {/* User Id to be given below */}
-                                        <span>12458796</span>
+                                        <span>{Cookies.get('id')}</span>
                                     </div>
-                                    <div className="dropdown-item" onClick={() => {
-                                        // Add your logout logic here
-                                        console.log('Logging out...');
+                                    <div className="dropdown-item" onClick={async() => {
+                                        // Add your logout logic here.
+                                        const response=await axios.get("http://localhost:8080/logout",{withCredentials:true});
+                                        navigate("/");
+                                        
                                     }}>
                                         <i className="icon-logout">⎋</i>
                                         <span>Logout</span>
@@ -178,7 +195,7 @@ const AdminDashboard = () => {
                         </div>
                         <div className="stat-card">
                             <span className="stat-number">
-                                {clubs.reduce((acc, club) => acc + club.membersCount, 0)}
+                                {clubs.reduce((acc, club) => acc + club.members.length, 0)}
                             </span>
                             <span className="stat-label">Total Members</span>
                         </div>
@@ -234,7 +251,8 @@ const AdminDashboard = () => {
                         <span className="badge">{filteredClubs.length} clubs</span>
                     </div>
 
-                    {filteredClubs.length > 0 ? (
+                    {filteredClubs_.length > 0 ? (
+                        
                         <div className="data-table-container">
                             <table className="data-table">
                                 <thead>
@@ -249,8 +267,9 @@ const AdminDashboard = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredClubs.map(club => (
-                                        <tr key={club.id}>
+                                    {filteredClubs_.map(club => (
+                                        (club != undefined && club._id != undefined && club._id != null && club._id != '') ?
+                                        <tr key={club._id}>
                                             <td>
                                                 <div className="club-name">
                                                     <div className="club-avatar"
@@ -261,8 +280,8 @@ const AdminDashboard = () => {
                                                 </div>
                                             </td>
                                             <td>{club.president}</td>
-                                            <td>{club.facultyCoordinator}</td>
-                                            <td>{club.membersCount}</td>
+                                            <td>{club.faculty}</td>
+                                            <td>{club.members.length}</td>
                                             <td>
                                                 <span className="category-tag">
                                                     {club.category}
@@ -281,7 +300,7 @@ const AdminDashboard = () => {
                                                     <i className="icon-more"></i>
                                                 </button>
                                             </td>
-                                        </tr>
+                                        </tr>:null
                                     ))}
                                 </tbody>
                             </table>

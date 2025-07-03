@@ -1,11 +1,10 @@
 const mongoose=require("mongoose");
 
 const admins=new mongoose.Schema({
-    admin_id:{
-        type:String,
-    },
-     address:{
-        type:String,
+   
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 
