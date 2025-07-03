@@ -1,6 +1,5 @@
-import { useState } from 'react'
+
 import LoginPage from './pages/jsx/Auth'
-import './App.css'
 import AdminDashboard from './pages/jsx/AdminDashboard'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 function App() {

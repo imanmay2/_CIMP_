@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import '../css/AdminDashboard.css';
 import axios from "axios";
+import NotificationsSection from '../../components/jsx/NotificationSection';
+
 const AdminDashboard = () => {
     // State for managing the list of clubs
     const [clubs, setClubs] = useState([
@@ -29,6 +31,7 @@ const AdminDashboard = () => {
     const [messageType, setMessageType] = useState('success');
 
 
+    const [showDropdown, setShowDropdown] = useState(false);
 
     // Function to display messages in the custom message box
     const showMessageBox = (msg, type = 'success') => {
@@ -114,8 +117,40 @@ const AdminDashboard = () => {
             {/* Dashboard Header */}
             <header className="dashboard-header">
                 <div className="header-content">
-                    <h1>Admin Dashboard</h1>
-                    <p>Manage all student organizations in one place</p>
+                    <div className='heading'>
+                        <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                            <h1>Admin Dashboard</h1>
+                            <p>Manage all student organizations in one place</p>
+                        </span>
+
+                        {/* profile button */}
+                        <div className="profile-dropdown">
+                            <button className="profile-button" onClick={() => setShowDropdown(!showDropdown)}>
+                                <div className="profile-avatar">
+                                    <span>A</span> {/* Replace with admin initial or image */}
+                                </div>
+                                <span>Admin</span>
+                                <i className={`dropdown-arrow ${showDropdown ? 'open' : ''}`}>▼</i>
+                            </button>
+
+                            {showDropdown && (
+                                <div className="dropdown-menu">
+                                    <div className="dropdown-item">
+                                        <i className="icon-user">👤</i>
+                                        {/* User Id to be given below */}
+                                        <span>12458796</span>
+                                    </div>
+                                    <div className="dropdown-item" onClick={() => {
+                                        // Add your logout logic here
+                                        console.log('Logging out...');
+                                    }}>
+                                        <i className="icon-logout">⎋</i>
+                                        <span>Logout</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                     <div className="header-stats">
                         <div className="stat-card">
                             <span className="stat-number">{clubs.length}</span>
@@ -242,7 +277,11 @@ const AdminDashboard = () => {
                         </div>
                     )}
                 </section>
+
             </main>
+
+            {/* Notifications Section */}
+            <NotificationsSection />
 
             {/* Create Club Modal */}
             {showCreateClubModal && (
@@ -340,6 +379,7 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             )}
+
         </div>
     );
 };
