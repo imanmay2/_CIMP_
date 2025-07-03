@@ -100,6 +100,14 @@ body {
     z-index: 1;
 }
 
+.heading {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-left: 6rem;
+    margin-right: 6rem;
+}
 
 
 .dashboard-header h1 {
@@ -127,6 +135,10 @@ body {
 }
 
 .stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     background: rgba(255, 255, 255, 0.05);
     padding: 1.5rem;
     border-radius: var(--element-radius);
@@ -157,6 +169,101 @@ body {
     color: var(--text-secondary);
     display: block;
     margin-top: 0.25rem;
+}
+
+/* Profile Dropdown Styles */
+.profile-dropdown {
+    position: relative;
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.profile-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3a86ff, #4cc9f0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+}
+
+.dropdown-arrow {
+    font-size: 0.6rem;
+    transition: transform 0.3s ease;
+    margin-left: 0.5rem;
+}
+
+.dropdown-arrow.open {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    background: #1a2a4a;
+    border-radius: 8px;
+    padding: 0.5rem 0;
+    min-width: 180px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 100;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-item i {
+    font-style: normal;
+}
+
+.dropdown-item:last-child {
+    color: #ff6b6b;
+}
+
+.dropdown-item:last-child:hover {
+    background: rgba(231, 76, 60, 0.1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Main Content */
@@ -639,6 +746,8 @@ body {
 .icon-more::before {
     content: "⋮";
 }
+
+
 
 /* Responsive */
 @media (max-width: 1200px) {

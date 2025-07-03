@@ -9,6 +9,7 @@ const LoginPage = () => {
 
     const [isLogin, setIsLogin] = useState(true);
     const [name, setName] = useState('');
+    const [id, setId] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const [role, setRole] = useState('');
@@ -136,6 +137,18 @@ const LoginPage = () => {
                 {/* SignIn Page */}
                 {!isLogin && (
                     <>
+                        <div className={styles.formGroup}>
+                            <input
+                                type="text"
+                                id="id"
+                                value={id}
+                                onChange={(e) => setId(e.target.value)}
+                                placeholder=" "
+                                className="peer"
+                            />
+                            <label htmlFor="id">Reg No. Or User ID</label>
+                        </div>
+
                         <div className={styles.formGroup}>
                             <input
                                 type="text"
