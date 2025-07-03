@@ -83,7 +83,7 @@ app.post("/signUp", async (req, res) => {
                 
                 //cookies
                 res.cookie("login", "true", { secure: false });
-                // res.cookie("username", userName, { secure: false });
+                res.cookie("id", id, { secure: false });
                 // res.cookie("name", Name, { secure: false });  // secure false as using http. not https.
                 if(Role==="faculty"){
                     const faculty1=new Faculty({
@@ -96,6 +96,11 @@ app.post("/signUp", async (req, res) => {
                     userId:user1._id
                 });
                 student1.save();
+                }else if(Role==="admin"){
+                    const admin1=new Admin({
+                        userId:user1._id
+                    })
+                    admin1.save();
                 }
                 console.log("User Signed Up!!");
                 flag = 1;
@@ -124,6 +129,8 @@ app.post("/login", async (req, res) => {
         bcrypt.compare(Password, hashPass, function (err, result) {
             if (result) {
                 flag = 1;
+                 res.cookie("login", "true", { secure: false });
+                res.cookie("id", userRes[0].id, { secure: false });
                 res.json({ "message": "User Logged in Successfully", "flag": "success" ,role:userRes[0].role});
             } else {
                 res.json({ "message": "Password is incorrect ! ", "flag": "error" });
@@ -144,21 +151,22 @@ app.post("/createNewClub",async(req,res)=>{
     console.log(req.body);
     try{
         let clubDetails=await Club.find({clubName:name});
-        let facultyDetails=await Faculty.find({faculty_id:facultyCoordinator}).populate('userId');
-        let studentDetails=await Student.find({regNo:president}).populate('userId');
+        let facultyDetails=await User.find({id:facultyCoordinator,role:"faculty"});
+        let studentDetails=await User.find({id:president,role:"president"});
         console.log("faculty_details_: "+facultyDetails);
-        console.log("Student _deatils:  "+studentDetails);
+        console.log("Student _detils:  "+studentDetails);
         //also check for the faculty and president already present in the database or not.
         if(!clubDetails.length){
             if(facultyDetails.length){
                 if(studentDetails.length){
                     let newClub_=new Club({
                         clubName:name,
-                        clubPresident:studentDetails[0].userId.id,
+                        clubPresident:studentDetails[0].name,
                         category:category,
-                        faculty:facultyDetails[0].userId.id,
+                        faculty:facultyDetails[0].name,
                         status:status,
-                        maxMembers:maxMemberCount
+                        maxMembers:maxMemberCount,
+                        
                     });
                     newClub_.save();
                     res.json({message:"Club Created Successfully",flag:"success"});
@@ -175,6 +183,18 @@ app.post("/createNewClub",async(req,res)=>{
         res.json({message:err.message,flag:"error"});
     }
 });
+
+
+
+//get club Data.
+app.get("/getClubData",async(req,res)=>{
+    try{
+        const clubData=await Club.find();
+        res.json(clubData);
+    } catch(err){
+        res.json({message:err.msg,flag:"error"});
+    }
+})
 
 
 
